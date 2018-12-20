@@ -66,7 +66,7 @@ def findMenuOptions(server_choice):
 	name   = server_choice.name
 	
 	if(status == "running"):
-		print("1 | Remote Connect [RCON]\n2 | Stop\n3 | Restart\n4 | Logs\n5 | Go Back\n")
+		print("1 | Remote Connect [RCON]\n2 | Stop\n3 | Restart\n4 | Logs\n5 | Save\n6 | Go Back\n")
 		choice = int(input("What would you like to do? " + color.RED))
 		
 		if(choice == 1):
@@ -79,6 +79,9 @@ def findMenuOptions(server_choice):
 		if(choice == 4):
 			print(color.END)
 			os.system("docker logs -f " + name)
+		if(choice == 5):
+			print(color.END)
+			os.system("docker exec -i " + name + " rcon-cli save-all")
 		else:
 			return False
 			
@@ -105,6 +108,10 @@ def main():
 	except KeyboardInterrupt:
 		print("\n")
 		sys.exit(0)
+	except:
+		print(color.RED + "Error ~~~ Restarting script")
+		os.system("sleep 1")
+		os.system("python3 ~/scripts/minecraft/access.py")
 
 		
 if __name__ == '__main__':
