@@ -36,7 +36,7 @@ class MC:
 		print(color.END)
 		os.system("docker logs -f " + self.name)
 	def rcon(self):
-		print(color.END + "\nAcessing [RCON] for " + color.CYAN + self.name + color.END + "...")
+		print(color.END + "\nAcessing [RCON] for " + color.CYAN + self.name + color.END + "... (\"ctrl+c\" to return to this menu)")
 		os.system("docker exec -i " + self.name + " rcon-cli")
 	def status(self):
 		output = os.popen("docker container inspect -f \"{{.State.Health.Status}}\" " + self.name).readlines()
