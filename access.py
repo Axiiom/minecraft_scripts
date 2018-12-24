@@ -31,7 +31,7 @@ def getServer():
 			VALUEERROR()
    
 def printServerList():
-	print(color.END + color.BOLD + "\nServers:\n" + color.END)
+	print(color.END + color.BOLD + "\nServers (\"ctrl+c\" to close):\n" + color.END)
 	print(color.UNDERLINE + "%-3s | %-15s | %-15s" % ("Num", "Name", "Status") + color.END)
 
 	i = 1;
