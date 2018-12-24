@@ -1,8 +1,8 @@
+from io import StringIO
 import docker
 import os
 import sys
 client = docker.from_env()
-
 
 class color:
    PURPLE = '\033[95m'
@@ -16,8 +16,59 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
-def rconSay(server_choice, message):
-	os.system("docker exec -i " + server_choice.name + " rcon-cli say " + message)
+def print_with_border(txt):
+	text = txt.splitlines()
+	maxlen = max(len(s) for s in text)
+	colwidth = maxlen+2
+
+	print('+' + '-'*colwidth + '+')
+	for s in text:
+		print('| %-*.*s |' % (maxlen, maxlen, s))
+
+	print('+' + '-'*colwidth + '+')
+
+class mc_server:
+	def __init__(self, container):
+		self.container = container
+		self.name = container.name
+	def restart(self, delay):
+		self.say("Server will restart in " + str(delay) + " seconds...")
+		self.container.restart(timeout=delay)
+	def stop(self, delay):
+		self.say("Server will stop in " + str(delay) + " seconds...")
+		self.container.stop(timeout=delay)
+	def start(self):
+		self.container.start()
+	def say(self, message):
+		os.system("docker exec -i " + self.name + " rcon-cli say " + message)
+	def printInformation(self):
+		print_with_border(self.name)
+		output = os.popen("docker exec " + self.name + " mcstatus localhost status").readlines()
+		print("-> " + output[0] + "-> " + output[2])
+	def printLogs(self):
+		print(color.END)
+		os.system("docker logs -f " + self.name)
+	def rcon(self):
+		print(color.END + "\nAcessing [RCON] for " + color.CYAN + self.name + color.END + "...")
+		os.system("docker exec -i " + self.name + " rcon-cli")
+	def status(self):
+		output = os.popen("docker container inspect -f \"{{.State.Health.Status}}\" " + self.name).readlines()
+		status = output[0]
+		if status == "healthy\n":
+			return color.GREEN + "healthy" + color.END
+		elif status == "unhealthy\n":
+			return color.RED + "unhealthy" + color.END
+		elif status == "starting\n":
+			return color.YELLOW + "starting" + color.END
+	def status_no_format(self):
+		output = os.popen("docker container inspect -f \"{{.State.Health.Status}}\" " + self.name).readlines()
+		status = output[0]
+		if status == "healthy\n":
+			return "healthy"
+		elif status == "unhealthy\n":
+			return "unhealthy"
+		elif status == "starting\n":
+			return "starting"
 
 def getServerChoice():
    containers = client.containers.list(all)
@@ -32,68 +83,51 @@ def printServerList():
 
 	i = 1;
 	for container in client.containers.list(all):
-		status = container.status
-		name   = container.name
-		
-		if status == "restarting":
-			status = color.DARKCYAN + status + color.END
-		if status == "running":
-			status = color.GREEN + status + color.END
-		if status == "exited":
-			status = color.RED + status + color.END
+		server = mc_server(container)
+		name   = server.name
+		status = server.status()
 		
 		print("%3d | %-15s | %-15s" % (i, name, status))
 		i+=1
 
-def restartServer(server_choice):
-	choice = int(input(color.END + "How many seconds would you like to delay the server restart by? " + color.RED))
-	rconSay(server_choice, ("Restarting server in " + str(choice) + " seconds..."))
-	server_choice.restart(timeout=choice)
-	
-def stopServer(server_choice):
-	choice = int(input(color.END + "How many seconds would you like to delay the shutdown of the server by? " + color.RED))
-	rconSay(server_choice, ("Shutting down the server in " + str(choice) + " seconds..."))
-	server_choice.stop(timeout=choice)
-
-def startServer(server_choice):
-	server_choice.start()
-	
-#def stopServer(server_choice):
-
-
+#Context-based options interface
 def findMenuOptions(server_choice):
-	status = server_choice.status
+	server = mc_server(server_choice)
+
+	mc_status = server.status_no_format()
+	docker_status = server_choice.status
 	name   = server_choice.name
 	
-	if(status == "running"):
-		print("1 | Remote Connect [RCON]\n2 | Stop\n3 | Restart\n4 | Logs\n5 | Save\n6 | Go Back\n")
+	if(mc_status == "healthy"):
+		print("1 | Remote Connect [RCON]\n2 | Stop\n3 | Restart\n4 | Logs\n6 | Go Back\n")
+		choice = int(input("What would you like to do? " + color.RED))
+		print(color.END)
+		
+		if(choice == 1):
+			server.rcon()
+		if(choice == 2):
+			delay = int(input("Input the number in seconds that you would like to delay the server shutdown: "))
+			server.stop(delay)
+		if(choice == 3):
+			delay = int(input("Input the number in seconds that you would like to delay the server shutdown: "))
+			server.restart(delay)
+		if(choice == 4):
+			server.printLogs()
+
+	if(mc_status == "starting"):
+		print("1 | Logs\n2 | Go Back\n")
 		choice = int(input("What would you like to do? " + color.RED))
 		
 		if(choice == 1):
-			print(color.END + "\nAcessing [RCON] for " + color.CYAN + name + color.END + "...")
-			os.system("docker exec -i " + name + " rcon-cli")
-		if(choice == 2):
-			stopServer(server_choice)
-		if(choice == 3):
-			restartServer(server_choice)
-		if(choice == 4):
-			print(color.END)
-			os.system("docker logs -f " + name)
-		if(choice == 5):
-			print(color.END)
-			os.system("docker exec -i " + name + " rcon-cli save-all")
-		else:
-			return False
+			server.printLogs()
 			
-	if(status == "exited"):
+	if(mc_status == "unhealthy" and docker_status == "exited"):
 		print("1 | Start\n2 | Go Back\n")
 		choice = int(input("What would you like to do? " + color.RED))
 		
 		if(choice == 1):
 			print(color.END + "Starting server...")
-			startServer(server_choice)
-		if(choice == 2):
-			return False
+			server.start()
 
 def main():
 	try:
@@ -110,7 +144,7 @@ def main():
 		sys.exit(0)
 	except:
 		print(color.RED + "Error ~~~ Restarting script")
-		os.system("sleep 1")
+		os.system("sleep .5")
 		os.system("python3 ~/scripts/minecraft/access.py")
 
 		
