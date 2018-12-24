@@ -107,6 +107,7 @@ def main():
 		try:
 			server_choice = getServer()
 		except:
+			print(color.END)
 			return
 
 		while(True):
