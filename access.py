@@ -120,12 +120,6 @@ def main():
 			except EOFError:
 				print()
 				break
-
-	#except:
-	#	print(color.RED + "Error ~~~ Restarting script")
-	#	os.system("sleep .5")
-	#	os.system("python3 ~/scripts/minecraft/access.py")
-
 		
 if __name__ == '__main__':
     main()
