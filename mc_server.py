@@ -14,7 +14,7 @@ def print_with_border(txt):
 
 	print('+' + '-'*colwidth + '+')
 
-class mc_server:
+class MC:
 	def __init__(self, container):
 		self.container = container
 		self.name = container.name

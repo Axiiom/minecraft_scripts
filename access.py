@@ -1,5 +1,6 @@
-from mc_server import mc_server
+from mc_server import MC
 from color import color
+import mc_server
 import docker
 import os
 import sys
@@ -35,7 +36,7 @@ def printServerList():
 
 	i = 1;
 	for container in client.containers.list(all):
-		server = mc_server(container)
+		server = MC(container)
 		name   = server.name
 		status = formatStatus(server.status())
 		
@@ -44,7 +45,7 @@ def printServerList():
 
 #Context-based options interface
 def menu(server_choice):
-	server = mc_server(server_choice)
+	server = MC(server_choice)
 
 	mc_status     = server.status()
 	docker_status = server_choice.status
@@ -52,10 +53,10 @@ def menu(server_choice):
 	
 	os.system("clear")
 	print()
-	server.printInformation()
-	print(color.UNDERLINE + color.BOLD + "Menu options (\"ctrl+d\" to go back):" + color.END)
 
 	if(mc_status == "healthy"):
+		server.printInformation()
+		print(color.UNDERLINE + color.BOLD + "Menu options (\"ctrl+d\" to go back):" + color.END)
 		print("1 | Remote Connect [RCON]\n2 | Stop\n3 | Restart\n4 | Logs\n")
 		choice = int(input("What would you like to do? " + color.RED))
 
@@ -82,18 +83,20 @@ def menu(server_choice):
 			server.printLogs()
 
 	if(mc_status == "starting"):
-		print("1 | Logs\n2 | Go Back\n")
+		mc_server.print_with_border(name)
+		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
+		print("1 | Logs\n")
 		choice = int(input("What would you like to do? " + color.RED))
 		
 		if(choice == 1):
 			server.printLogs()
 			
 	if(mc_status == "unhealthy" and docker_status == "exited"):
-		print("1 | Start\n2 | Go Back\n")
+		mc_server.print_with_border(name)
+		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
+		print("1 | Start\n")
 
-		while(True):
-			choice = int(input("What would you like to do? " + color.RED))
-		
+		choice = int(input("What would you like to do? " + color.RED))
 		if(choice == 1):
 			print(color.END + "Starting server...")
 			server.start()
