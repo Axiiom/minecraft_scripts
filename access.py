@@ -113,13 +113,17 @@ def main():
 		printServerList()
 		try:
 			server_choice = getServer()
+		except KeyboardInterrupt:
+			print(color.YELLOW + "\nExiting script...\n" + color.END)
+			os.system("sleep .5")
+			sys.exit(0)
 		except:
 			print(color.END)
 			return
 
 		while(True):
 			try:
-				oops = menu(server_choice)
+				menu(server_choice)
 				break
 			except KeyboardInterrupt:
 				print(color.YELLOW + "\nExiting script...\n" + color.END)
