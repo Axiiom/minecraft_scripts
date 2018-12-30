@@ -20,9 +20,13 @@ class MC:
 		self.name = container.name
 	def restart(self, delay):
 		self.say("Server will restart in " + str(delay) + " seconds...")
+		os.system("docker exec -i " + self.name + " rcon-cli save-all")
+		os.system("sleep .5")
 		self.container.restart(timeout=delay)
 	def stop(self, delay):
 		self.say("Server will stop in " + str(delay) + " seconds...")
+		os.system("docker exec -i " + self.name + " rcon-cli save-all")
+		os.system("sleep .5")
 		self.container.stop(timeout=delay)
 	def start(self):
 		self.container.start()
@@ -31,7 +35,7 @@ class MC:
 	def printInformation(self):
 		output = os.popen("docker exec " + self.name + " mcstatus localhost status").readlines()
 		print_with_border(self.name)
-		print("-> " + output[0] + "-> " + output[2])
+		print( "-> " + output[0] + "-> " + output[2])
 	def printLogs(self):
 		print(color.END)
 		os.system("docker logs -f " + self.name)

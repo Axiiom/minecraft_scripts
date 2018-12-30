@@ -57,7 +57,9 @@ def menu(server_choice):
 	if(mc_status == "healthy"):
 		server.printInformation()
 		print(color.UNDERLINE + color.BOLD + "Menu options (\"ctrl+d\" to go back):" + color.END)
-		print("1 | Remote Connect [RCON]\n2 | Stop\n3 | Restart\n4 | Logs\n")
+		print("1 | " + color.DARKCYAN + "Remote Connect [RCON]" + color.END + "\n2 | " + color.RED 
+			+ "Stop" + color.END + "\n3 | " + color.YELLOW + "Restart" + color.END
+			+ "\n4 | " + color.BOLD + "Logs\n" + color.END)
 		choice = int(input("What would you like to do? " + color.RED))
 
 		print(color.END)
@@ -67,6 +69,7 @@ def menu(server_choice):
 			try:
 				delay = int(input("Input the number in seconds that you would like to delay the server shutdown: "))
 				server.stop(delay)
+				return True
 			except ValueError:
 				VALUEERROR()
 			except EOFError:
@@ -81,11 +84,12 @@ def menu(server_choice):
 				print()
 		if(choice == 4):
 			server.printLogs()
+			os.system("sleep 5")
 
 	if(mc_status == "starting"):
 		mc_server.print_with_border(name)
 		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
-		print("1 | Logs\n")
+		print("1 | " + color.BOLD + "Logs\n" + color.END)
 		choice = int(input("What would you like to do? " + color.RED))
 		
 		if(choice == 1):
@@ -94,7 +98,7 @@ def menu(server_choice):
 	if(mc_status == "unhealthy" and docker_status == "exited"):
 		mc_server.print_with_border(name)
 		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
-		print("1 | Start\n")
+		print("1 | " + color.GREEN + "Start\n" + color.END)
 
 		choice = int(input("What would you like to do? " + color.RED))
 		if(choice == 1):
@@ -115,13 +119,14 @@ def main():
 
 		while(True):
 			try:
-				menu(server_choice)
+				oops = menu(server_choice)
+				break
 			except KeyboardInterrupt:
 				print(color.YELLOW + "\nExiting script...\n" + color.END)
 				os.system("sleep .5")
 				sys.exit(0)
 			except EOFError:
-				print()
+				print(color.END)
 				break
 		
 if __name__ == '__main__':
