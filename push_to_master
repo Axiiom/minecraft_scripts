@@ -1,4 +1,6 @@
 #!/bin/bash
+#automatically adds and commits any changes
+
 git add .
 printf 'Enter commit message: '
 read -r message
