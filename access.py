@@ -15,7 +15,7 @@ def formatStatus(status):
 	if status == "healthy":
 		return color.GREEN + "Healthy  " + color.END
 	elif status == "unhealthy":
-		return color.RED + "Unhealthy" + color.END
+		return "         "
 	elif status == "starting":
 		return color.YELLOW + "Starting " + color.END
 
@@ -74,8 +74,10 @@ def menu(server_choice):
 			server.rcon()
 		if(choice == 2):
 			try:
-				delay = int(input("Input the number in seconds that you would like to delay the server shutdown: "))
-				server.stop(delay)
+				server.save()
+				server.say("Server stopping in 5 seconds...")
+				os.system("sleep 5")
+				server.stop(0)
 				return True
 			except ValueError:
 				VALUEERROR()
@@ -83,27 +85,22 @@ def menu(server_choice):
 				print()
 		if(choice == 3):
 			try:
-				delay = int(input("Input the number in seconds that you would like to delay the server shutdown: "))
-				server.restart(delay)
+				server.save()
+				server.say("Server restarting in 5 seconds...")
+				os.system("sleep 5")
+				server.restart(0)
 			except ValueError:
 				VALUEERROR()
 			except EOFError:
 				print()
 		if(choice == 4):
-			server.printLogs()
-			os.system("sleep 5")
+			server.attachLogs()
 
 	if(mc_status == "starting"):
-		mc_server.print_with_border(name)
-		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
-		print("1 | " + color.BOLD + "Logs\n" + color.END)
-		choice = int(input("What would you like to do? " + color.RED))
-		
-		if(choice == 1):
-			server.printLogs()
+		server.attachLogs()
 			
 	if(mc_status == "unhealthy" and docker_status == "exited"):
-		mc_server.print_with_border(name)
+		server.printInformation()
 		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
 		print("1 | " + color.GREEN + "Start\n" + color.END)
 
