@@ -26,18 +26,16 @@ def formatStatus(status):
 		return color.RED + "Exited" + color.END
 
 def getServer():
-	containers = client.containers.list(all)
-
-	while True:
-		try:
-			choice = int(input(color.END + "\nWhich server would you like to access? " + color.RED))
-			print(color.END)
-			return containers[choice-1]
-		except ValueError:
-			VALUEERROR()
+	try:
+		containers = client.containers.list(all)
+		choice = int(input(color.END + "\nWhich server would you like to access? " + color.RED))
+		print(color.END)
+		return containers[choice-1]
+	except ValueError:
+		print()
    
 def printServerList():
-	print(color.END + color.BOLD + "\nServers (\"ctrl+c\" to close):\n" + color.END)
+	print(color.END + color.BOLD + "\nServers (press any key to refresh | \"ctrl+c\" to close):\n" + color.END)
 	print(color.UNDERLINE + "%-3s | %-15s | %-8s | %-15s" % ("Num", "Name", "MC Status", "Container Status") + color.END)
 
 	i = 1;
@@ -71,13 +69,20 @@ def menu(server_choice):
 
 		print(color.END)
 		if(choice == 1):
-			server.rcon()
+			try:
+				server.rcon()
+			except KeyboardInterrupt:
+				print("")
 		if(choice == 2):
 			try:
-				server.save()
-				server.say("Server stopping in 5 seconds...")
-				os.system("sleep 5")
-				server.stop(0)
+				stop = input("Are you sure you would like to stop the server? (y/n): ")
+
+				if stop == "y":
+					server.save()
+					server.say("Server stopping in 5 seconds...")
+					os.system("sleep 5")
+					server.stop(0)
+
 				return True
 			except ValueError:
 				VALUEERROR()
@@ -85,10 +90,13 @@ def menu(server_choice):
 				print()
 		if(choice == 3):
 			try:
-				server.save()
-				server.say("Server restarting in 5 seconds...")
-				os.system("sleep 5")
-				server.restart(0)
+				restart = input("Are you sure you would like to stop the server? (y/n): ")
+				
+				if restart == "y":
+					server.save()
+					server.say("Server restarting in 5 seconds...")
+					os.system("sleep 5")
+					server.restart(0)
 			except ValueError:
 				VALUEERROR()
 			except EOFError:
@@ -114,28 +122,17 @@ def main():
 		
 	while True:
 		os.system("clear")
-		printServerList()
 		try:
+			printServerList()
 			server_choice = getServer()
+			if(server_choice):
+				menu(server_choice)
 		except KeyboardInterrupt:
 			print(color.YELLOW + "\nExiting script...\n" + color.END)
 			os.system("sleep .5")
 			sys.exit(0)
-		except:
+		except EOFError:
 			print(color.END)
-			return
-
-		while(True):
-			try:
-				menu(server_choice)
-				break
-			except KeyboardInterrupt:
-				print(color.YELLOW + "\nExiting script...\n" + color.END)
-				os.system("sleep .5")
-				sys.exit(0)
-			except EOFError:
-				print(color.END)
-				break
 		
 if __name__ == '__main__':
     main()
