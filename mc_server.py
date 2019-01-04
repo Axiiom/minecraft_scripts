@@ -21,22 +21,20 @@ class MC:
 		self.is_running = (container.status == "running")
 
 
-	#restarts the container
-	def restart(self, delay):
+	#calls "message" on this servers' rcon-cli and returns the result
+	def __rcon_call(self, message):
 		if(self.is_running):
-			self.container.restart(timeout=delay)
+			return os.popen("docker exec " + self.name + " rcon-cli " + message).readlines()
 
-
-	#stops the container
-	def stop(self, delay):
+	#calls "message" on this servers' rcon-cli and prints the result to the console
+	def __rcon_call_loud(self, message):
 		if(self.is_running):
-			self.container.stop(timeout=delay)
+			os.system("docker exec " + self.name + " rcon-cli " + message)
 
-
-	#calls save on the servers' rcon-cli
-	def save(self):
+	#interactively calls "message" on this servers' rcon-cli and returns the result
+	def __rcon_call_interactive(self, message):
 		if(self.is_running):
-			self.rcon_call_loud("save-all")
+			return os.popen("docker exec -i" + self.name + " rcon-cli " + message).readlines()
 
 
 	#starts the container
@@ -45,41 +43,29 @@ class MC:
 			self.container.start()
 
 
-	#calls "message" on this servers' rcon-cli and prints the result to the console
-	def rcon_call_loud(self, message):
+	#stops the container
+	def stop(self, delay):
 		if(self.is_running):
-			os.system("docker exec " + self.name + " rcon-cli " + message)
+			self.container.stop(timeout=delay)
 
 
-	#calls "message" on this servers' rcon-cli and returns the result
-	def rcon_call(self, message):
+	#restarts the container
+	def restart(self, delay):
 		if(self.is_running):
-			return os.popen("docker exec " + self.name + " rcon-cli " + message).readlines()
+			self.container.restart(timeout=delay)
 
 
-	#interactively calls "message" on this servers' rcon-cli and returns the result
-	def rcon_call_interactive(self, message):
+	#calls save on the servers' rcon-cli
+	def save(self):
 		if(self.is_running):
-			return os.popen("docker exec -i" + self.name + " rcon-cli " + message).readlines()
+			self.__rcon_call_loud("save-all")
 
 
 	#writes "message" to the server using rcon-cli
 	def say(self, message):
 		if(self.is_running):
-			os.system("docker exec -i " + self.name + " rcon-cli say " + message)
+			self.__rcon_call_loud("say " + message)
 
-
-	#gets the current player count of the server as a string
-	def getPlayerCount(self):
-		if(self.is_running):
-			raw_playercount = self.rcon_call("list")[0]
-			playercount = raw_playercount.replace("There are ","").replace(" of a max ","/").replace(" players online: "," | ")
-			index_of_break = playercount.find(" | ")
-			try:
-				playercount[index_of_break + 4]
-				return playercount
-			except:
-				return playercount.replace(" | ","")
 
 
 	#gets the version of the server
@@ -88,6 +74,20 @@ class MC:
 			output  = os.popen("docker exec " + self.name + " mcstatus localhost status").readlines()
 			version = output[0].replace("version: ", "")
 			return version.strip()
+
+	#gets the current player count of the server as a string
+	def getPlayerCount(self):
+		if(self.is_running):
+			raw_playercount = self.__rcon_call("list")[0]
+			playercount = raw_playercount.replace("There are ","").replace(" of a max ","/").replace(" players online: "," | ")
+
+			index_of_break = playercount.find(" | ")
+			try:
+				playercount[index_of_break + 4]
+				return playercount
+			except:
+				return playercount.replace(" | ","")
+
 
 
 	# prints current server information to the console in the format:

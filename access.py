@@ -48,7 +48,7 @@ def printServerList():
 		print("%3d | %-15s | %-8s | %-15s" % (i, name, status, docker_status))
 		i+=1
 
-#Context-based options interface
+#Context-based options interface, takes in a docker container "server_choice"
 def menu(server_choice):
 	server = MC(server_choice)
 
@@ -69,10 +69,7 @@ def menu(server_choice):
 
 		print(color.END)
 		if(choice == 1):
-			try:
-				server.rcon()
-			except KeyboardInterrupt:
-				print("")
+			server.rcon()
 		if(choice == 2):
 			try:
 				stop = input("Are you sure you would like to stop the server? (y/n): ")
