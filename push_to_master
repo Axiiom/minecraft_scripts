@@ -1,5 +1,5 @@
 #!/bin/bash
-#automatically adds and commits any changes
+#automatically adds and commits any changess
 
 git add .
 printf 'Enter commit message: '
