@@ -11,13 +11,19 @@ def VALUEERROR():
 	os.system("sleep .5")
 
 def formatStatus(status):
+	#for MC Server Status - spacing is important here because of the color codes.
 	if status == "healthy":
-		return color.GREEN + "healthy" + color.END
+		return color.GREEN + "Healthy  " + color.END
 	elif status == "unhealthy":
-		return color.RED + "unhealthy" + color.END
+		return color.RED + "Unhealthy" + color.END
 	elif status == "starting":
-		return color.YELLOW + "starting" + color.END
+		return color.YELLOW + "Starting " + color.END
 
+	#for Container Status
+	elif status == "running":
+		return color.GREEN + "Running" + color.END
+	elif status == "exited":
+		return color.RED + "Exited" + color.END
 
 def getServer():
 	containers = client.containers.list(all)
@@ -32,15 +38,16 @@ def getServer():
    
 def printServerList():
 	print(color.END + color.BOLD + "\nServers (\"ctrl+c\" to close):\n" + color.END)
-	print(color.UNDERLINE + "%-3s | %-15s | %-15s" % ("Num", "Name", "Status") + color.END)
+	print(color.UNDERLINE + "%-3s | %-15s | %-8s | %-15s" % ("Num", "Name", "MC Status", "Container Status") + color.END)
 
 	i = 1;
 	for container in client.containers.list(all):
 		server = MC(container)
 		name   = server.name
 		status = formatStatus(server.status())
+		docker_status = formatStatus(container.status)
 		
-		print("%3d | %-15s | %-15s" % (i, name, status))
+		print("%3d | %-15s | %-8s | %-15s" % (i, name, status, docker_status))
 		i+=1
 
 #Context-based options interface
