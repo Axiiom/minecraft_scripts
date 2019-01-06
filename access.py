@@ -1,135 +1,132 @@
-from mc_server import MC
-from color import color
-import mc_server
-import docker
 import os
 import sys
+import docker
+from color import Color
+from mc_server import MC
 client = docker.from_env()
 
-def VALUEERROR():
-	print("\r" + color.RED + "Invalid input detected!" + color.END)
-	os.system("sleep .5")
 
-def formatStatus(status):
-	#for MC Server Status - spacing is important here because of the color codes.
-	if status == "healthy":
-		return color.GREEN + "Healthy  " + color.END
-	elif status == "unhealthy":
-		return "         "
-	elif status == "starting":
-		return color.YELLOW + "Starting " + color.END
+def format_status(status):
+    # for MC Server Status - spacing is important here because of the color codes.
+    if status == "healthy":
+        return Color.GREEN + "Healthy  " + Color.END
+    elif status == "unhealthy":
+        return "         "
+    elif status == "starting":
+        return Color.YELLOW + "Starting " + Color.END
 
-	#for Container Status
-	elif status == "running":
-		return color.GREEN + "Running" + color.END
-	elif status == "exited":
-		return color.RED + "Exited" + color.END
+    elif status == "running":
+        return Color.GREEN + "Running" + Color.END
+    elif status == "exited":
+        return Color.RED + "Exited" + Color.END
 
-def getServer():
-	try:
-		containers = client.containers.list(all)
-		choice = int(input(color.END + "\nWhich server would you like to access? " + color.RED))
-		print(color.END)
-		return containers[choice-1]
-	except ValueError:
-		print()
-   
-def printServerList():
-	print(color.END + color.BOLD + "\nServers (press any key to refresh | \"ctrl+c\" to close):\n" + color.END)
-	print(color.UNDERLINE + "%-3s | %-15s | %-8s | %-15s" % ("Num", "Name", "MC Status", "Container Status") + color.END)
 
-	i = 1;
-	for container in client.containers.list(all):
-		server = MC(container)
-		name   = server.name
-		status = formatStatus(server.status())
-		docker_status = formatStatus(container.status)
-		
-		print("%3d | %-15s | %-8s | %-15s" % (i, name, status, docker_status))
-		i+=1
+def get_server():
+    try:
+        containers = client.containers.list(all)
+        choice = int(input(Color.END + "\nWhich server would you like to access? " + Color.RED))
+        print(Color.END)
+        return containers[choice-1]
+    except ValueError:
+        print()
 
-#Context-based options interface, takes in a docker container "server_choice"
+
+def print_server_list():
+    print(Color.END + Color.BOLD + "\nServers (press any key to refresh | \"ctrl+c\" to close):\n" + Color.END)
+    print(Color.UNDERLINE + "%-3s | %-15s | %-8s | %-15s" % ("Num", "Name", "MC Status", "Container Status") + Color.END)
+
+    i = 1;
+    for container in client.containers.list(all):
+        server = MC(container)
+        name = server.name
+        status = format_status(server.status())
+        docker_status = format_status(container.status)
+
+        print("%3d | %-15s | %-8s | %-15s" % (i, name, status, docker_status))
+        i+=1
+
+
+# Context-based options interface, takes in a docker container "server_choice"
 def menu(server_choice):
-	server = MC(server_choice)
+    server = MC(server_choice)
 
-	mc_status     = server.status()
-	docker_status = server_choice.status
-	name = server_choice.name
-	
-	os.system("clear")
-	print()
+    mc_status = server.status()
+    docker_status = server_choice.status
+    name = server_choice.name
 
-	if(mc_status == "healthy"):
-		server.printInformation()
-		print(color.UNDERLINE + color.BOLD + "Menu options (\"ctrl+d\" to go back):" + color.END)
-		print("1 | " + color.DARKCYAN + "Remote Connect [RCON]" + color.END + "\n2 | " + color.RED 
-			+ "Stop" + color.END + "\n3 | " + color.YELLOW + "Restart" + color.END
-			+ "\n4 | " + color.BOLD + "Logs\n" + color.END)
-		choice = int(input("What would you like to do? " + color.RED))
+    os.system("clear")
+    print()
 
-		print(color.END)
-		if(choice == 1):
-			server.rcon()
-		if(choice == 2):
-			try:
-				stop = input("Are you sure you would like to stop the server? (y/n): ")
+    if mc_status == "healthy":
+        server.print_information()
+        print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
+        print("1 | " + Color.DARKCYAN + "Remote Connect [RCON]" + Color.END + "\n2 | " + Color.RED + "Stop" + Color.END + "\n3 | " + Color.YELLOW + "Restart" + Color.END + "\n4 | " + Color.BOLD + "Logs\n" + Color.END)
+        choice = int(input("What would you like to do? " + Color.RED))
 
-				if stop == "y":
-					server.save()
-					server.say("Server stopping in 5 seconds...")
-					os.system("sleep 5")
-					server.stop(0)
+        print(Color.END)
+        if choice == 1:
+            server.rcon()
+        if choice == 2:
+            try:
+                stop = input("Are you sure you would like to stop the server? (y/n): ")
 
-				return True
-			except ValueError:
-				VALUEERROR()
-			except EOFError:
-				print()
-		if(choice == 3):
-			try:
-				restart = input("Are you sure you would like to stop the server? (y/n): ")
-				
-				if restart == "y":
-					server.save()
-					server.say("Server restarting in 5 seconds...")
-					os.system("sleep 5")
-					server.restart(0)
-			except ValueError:
-				VALUEERROR()
-			except EOFError:
-				print()
-		if(choice == 4):
-			server.attachLogs()
+                if stop == "y":
+                    server.save()
+                    server.say("Server stopping in 5 seconds...")
+                    os.system("sleep 5")
+                    server.stop(0)
 
-	if(mc_status == "starting"):
-		server.attachLogs()
-			
-	if(mc_status == "unhealthy" and docker_status == "exited"):
-		server.printInformation()
-		print(color.UNDERLINE + color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + color.END)
-		print("1 | " + color.GREEN + "Start\n" + color.END)
+                return True
+            except ValueError:
+                print()
+            except EOFError:
+                print()
+        if choice == 3:
+            try:
+                restart = input("Are you sure you would like to stop the server? (y/n): ")
+                if restart == "y":
+                    server.save()
+                    server.say("Server restarting in 5 seconds...")
+                    os.system("sleep 5")
+                    server.restart(0)
+            except ValueError:
+                print()
+            except EOFError:
+                print()
+        if choice == 4:
+            server.attach_logs()
 
-		choice = int(input("What would you like to do? " + color.RED))
-		if(choice == 1):
-			print(color.END + "Starting server...")
-			server.start()
+    if mc_status == "starting":
+        server.attach_logs()
+
+    if mc_status == "unhealthy" and docker_status == "exited":
+        server.print_information()
+        print(Color.UNDERLINE + Color.BOLD + "\nMenu options (\"ctrl+d\" to go back):" + Color.END)
+        print("1 | " + Color.GREEN + "Start\n" + Color.END)
+
+        choice = int(input("What would you like to do? " + Color.RED))
+        if choice == 1:
+            print(Color.END + "Starting server...")
+            server.start()
+
 
 def main():
-	os.system("clear")
-		
-	while True:
-		os.system("clear")
-		try:
-			printServerList()
-			server_choice = getServer()
-			if(server_choice):
-				menu(server_choice)
-		except KeyboardInterrupt:
-			print(color.YELLOW + "\nExiting script...\n" + color.END)
-			os.system("sleep .5")
-			sys.exit(0)
-		except EOFError:
-			print(color.END)
-		
+    os.system("clear")
+
+    while True:
+        os.system("clear")
+        try:
+            print_server_list()
+            server_choice = get_server()
+            if server_choice:
+                menu(server_choice)
+        except KeyboardInterrupt:
+            print(Color.YELLOW + "\nExiting script...\n" + Color.END)
+            os.system("sleep .5")
+            sys.exit(0)
+        except EOFError:
+            print(Color.END)
+
+
 if __name__ == '__main__':
     main()
