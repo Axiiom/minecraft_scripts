@@ -15,6 +15,7 @@ def format_status(status):
     elif status == "starting":
         return Color.YELLOW + "Starting " + Color.END
 
+    # for Docker Container status
     elif status == "running":
         return Color.GREEN + "Running" + Color.END
     elif status == "exited":
@@ -39,11 +40,11 @@ def print_server_list():
     for container in client.containers.list(all):
         server = MC(container)
         name = server.name
-        status = format_status(server.status())
+        mc_status = format_status(server.status())
         docker_status = format_status(container.status)
 
-        print("%3d | %-15s | %-8s | %-15s" % (i, name, status, docker_status))
-        i+=1
+        print("%3d | %-15s | %-8s | %-15s" % (i, name, mc_status, docker_status))
+        i += 1
 
 
 # Context-based options interface, takes in a docker container "server_choice"
@@ -52,7 +53,6 @@ def menu(server_choice):
 
     mc_status = server.status()
     docker_status = server_choice.status
-    name = server_choice.name
 
     os.system("clear")
     print()
@@ -60,7 +60,9 @@ def menu(server_choice):
     if mc_status == "healthy":
         server.print_information()
         print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
-        print("1 | " + Color.DARKCYAN + "Remote Connect [RCON]" + Color.END + "\n2 | " + Color.RED + "Stop" + Color.END + "\n3 | " + Color.YELLOW + "Restart" + Color.END + "\n4 | " + Color.BOLD + "Logs\n" + Color.END)
+        print("1 | " + Color.DARKCYAN + "Remote Connect [RCON]" + Color.END + "\n2 | " + Color.RED
+              + "Stop" + Color.END + "\n3 | " + Color.YELLOW + "Restart" + Color.END + "\n4 | "
+              + Color.BOLD + "Logs\n" + Color.END)
         choice = int(input("What would you like to do? " + Color.RED))
 
         print(Color.END)

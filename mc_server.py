@@ -4,12 +4,12 @@ from color import Color
 
 def print_with_border(txt):
     text = txt.splitlines()
-    maxlength = max(len(s) for s in text)
-    colwidth = maxlength + 2
+    maxLength = max(len(s) for s in text)
+    colwidth = maxLength + 2
 
     print('+' + '-' * colwidth + '+')
     for s in text:
-        print('| %-*.*s |' % (maxlength, maxlength, s))
+        print('| %-*.*s |' % (maxLength, maxLength, s))
 
     print('+' + '-' * colwidth + '+')
 
@@ -114,7 +114,8 @@ class MC:
         if self.is_running:
             command = "docker exec -i " + self.name + " rcon-cli"
             print(
-                Color.END + "\nAccessing [RCON] for " + Color.CYAN + self.name + Color.END + "... (\"ctrl+c\" or \"ctrl+d\" to exit)")
+                Color.END + "\nAccessing [RCON] for " + Color.CYAN + self.name + Color.END
+                + "... (\"ctrl+c\" or \"ctrl+d\" to exit)")
             os.system(command)
 
     # gets the status of the docker container
