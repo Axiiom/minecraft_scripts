@@ -70,15 +70,23 @@ class MC:
     # gets the current player count of the server as a string
     def get_player_count(self):
         if self.is_running:
-            raw_pc = self.__rcon_call("list")[0]
-            pc = raw_pc.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ", " | ")
+            player_count = self.__rcon_call("list")[0]
+            player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
+            index_of_break = player_count.index("|")
+            player_count = player_count[:index_of_break].strip()
 
-            index_of_break = pc.find(" | ")
-            try:
-                pc[index_of_break + 4]
-                return pc
-            except:
-                return pc.replace(" | ", "")
+            return player_count
+
+
+    # returns the online players in a list of strings
+    def get_online_players(self):
+        if self.is_running:
+            player_count = self.__rcon_call("list")[0]
+            index = str.index(player_count, "online: ") + 8
+            player_count = player_count[index:].strip()
+            return player_count.split(", ")
+
+
 
     # prints current server information to the console in the format:
     #
@@ -90,12 +98,16 @@ class MC:
     def print_information(self):
         print_with_border(self.name)
         version = self.get_version()
-        players = self.get_player_count()
+        player_count = self.get_player_count()
+        players_online = self.get_online_players()
 
         if version:
             print("Version: %s" % version)
-        if players:
-            print("Players: %s" % players)
+        if players_online:
+            players = ""
+            for s in players_online:
+                players += s + ", "
+            print("Players: %s | %s" % (player_count, players))
 
     # prints and attaches to this servers' logs
     def attach_logs(self):
