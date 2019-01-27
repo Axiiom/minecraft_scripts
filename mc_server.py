@@ -68,7 +68,7 @@ class MC:
             version = output[0].replace("version: ", "")
             return version.strip()
 
-    # gets the current player count of the server as a string
+    # gets the current player count of the server as an integer
     def get_player_count(self):
         if self.is_running:
             player_count = self.__rcon_call("list")[0]
@@ -79,6 +79,7 @@ class MC:
             players = list(re.findall('\d+', player_count))
             return int(players[0])
 
+    # gets the total player count of the server as an integer
     def get_total_players(self):
         if self.is_running:
             player_count = self.__rcon_call("list")[0]
