@@ -42,9 +42,15 @@ def print_server_list():
         name = server.name
         mc_status = format_status(server.status())
         docker_status = format_status(container.status)
-        player_count = server.get_player_count()
 
-        print("%3d | %-15s | %-10s | %-8s | %-15s" % (i, name, player_count, mc_status, docker_status))
+        player_count = server.get_player_count()
+        total_players = server.get_total_players()
+
+        players = "None"
+        if player_count is not None and total_players is not None:
+            players = str(player_count) + "/" + str(total_players)
+
+        print("%3d | %-15s | %-10s | %-8s | %-15s" % (i, name, players, mc_status, docker_status))
         i += 1
 
 

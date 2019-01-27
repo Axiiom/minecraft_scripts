@@ -1,4 +1,5 @@
 import os
+import re
 from color import Color
 
 
@@ -75,7 +76,18 @@ class MC:
             index_of_break = player_count.index("|")
             player_count = player_count[:index_of_break].strip()
 
-            return player_count
+            players = list(re.findall('\d+', player_count))
+            return int(players[0])
+
+    def get_total_players(self):
+        if self.is_running:
+            player_count = self.__rcon_call("list")[0]
+            player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
+            index_of_break = player_count.index("|")
+            player_count = player_count[:index_of_break].strip()
+
+            players = list(re.findall('\d+', player_count))
+            return int(players[1])
 
     # returns the online players in a list of strings
     def get_online_players(self):
@@ -99,6 +111,7 @@ class MC:
         print_with_border(self.name)
         version = self.get_version()
         player_count = self.get_player_count()
+        total_players = self.get_total_players()
         players_online = self.get_online_players()
 
         if version:
@@ -107,9 +120,9 @@ class MC:
             players = ""
             for s in players_online:
                 players += s + ", "
-            print("Players: %s | %s" % (player_count, players))
+            print("Players: %d/%d | %s" % (player_count, total_players, players))
         else:
-            print("Players: %s" % player_count)
+            print("Players: %d/%d" % (player_count, total_players))
 
     # prints and attaches to this servers' logs
     def attach_logs(self):
