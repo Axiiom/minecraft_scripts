@@ -36,7 +36,7 @@ def print_server_list():
     print(Color.END + Color.BOLD + "\nServers (press any key to refresh | \"ctrl+c\" to close):\n" + Color.END)
     print(Color.UNDERLINE + "%-3s | %-15s | %-10s | %-8s | %-15s" % ("Num", "Name", "Players", "MC Status", "Container Status") + Color.END)
 
-    i = 1;
+    i = 1
     for container in client.containers.list(all):
         server = MC(container)
         name = server.name
