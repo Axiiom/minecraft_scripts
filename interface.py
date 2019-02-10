@@ -92,7 +92,7 @@ def user_management(server):
         print(str(i) + " | " + player + "\n")
         i = i + 1
 
-    os.system("sleep 5")
+    choice = int(input("Which player would you like to manage? " + Color.RED))
 
 
 # Context-based options interface, takes in a docker container "server_choice"
