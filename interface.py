@@ -97,8 +97,8 @@ def menu(server_choice):
         server.print_information()
         print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
         print("1 | " + Color.DARKCYAN + "Remote Connect [RCON]" + Color.END + "\n" +
-              "2 | " + Color.CYAN + "Server Management" + Color.END + "\n" +
-              "3 | " + Color.YELLOW + "Player Management" + "\n" +
+              "2 | " + Color.GREEN + "Server Management" + Color.END + "\n" +
+              "3 | " + Color.YELLOW + "Player Management" + Color.END + "\n" +
               "4 | " + Color.BOLD + "Logs" + Color.END + "\n")
         choice = int(input("What would you like to do? " + Color.RED))
 
