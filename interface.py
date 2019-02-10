@@ -54,6 +54,34 @@ def print_server_list():
         i += 1
 
 
+def server_management(server):
+    os.system("clear")
+
+    server.print_information()
+    print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
+    print("1 | " + Color.RED + "Stop" + "\n" +
+          "2 | " + Color.YELLOW + "Restart" + Color.END + "\n")
+
+    choice = int(input("What would you like to do? " + Color.RED))
+    if choice == 1:
+        stop = input("Are you sure you would like to stop the server? (y/n): ")
+
+        if stop == "y":
+            server.save()
+            server.say("Server stopping in 5 seconds...")
+            os.system("sleep 5")
+            server.stop(0)
+
+    elif choice == 2:
+        restart = input("Are you sure you would like to restart the server? (y/n): ")
+
+        if restart == "y":
+            server.save()
+            server.say("Server restarting in 5 seconds...")
+            os.system("sleep 5")
+            server.restart(0)
+
+
 # Context-based options interface, takes in a docker container "server_choice"
 def menu(server_choice):
     server = MC(server_choice)
@@ -67,41 +95,20 @@ def menu(server_choice):
     if mc_status == "healthy":
         server.print_information()
         print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
-        print("1 | " + Color.DARKCYAN + "Remote Connect [RCON]" + Color.END + "\n2 | " + Color.RED
-              + "Stop" + Color.END + "\n3 | " + Color.YELLOW + "Restart" + Color.END + "\n4 | "
-              + Color.BOLD + "Logs\n" + Color.END)
+        print("1 | " + Color.DARKCYAN + "Remote Connect [RCON]" + Color.END + "\n" +
+              "2 | " + Color.CYAN + "Server Management" + Color.END + "\n" +
+              "3 | " + Color.YELLOW + "Player Management" + "\n" +
+              "4 | " + Color.BOLD + "Logs" + Color.END + "\n")
         choice = int(input("What would you like to do? " + Color.RED))
 
         print(Color.END)
         if choice == 1:
             server.rcon()
         if choice == 2:
-            try:
-                stop = input("Are you sure you would like to stop the server? (y/n): ")
-
-                if stop == "y":
-                    server.save()
-                    server.say("Server stopping in 5 seconds...")
-                    os.system("sleep 5")
-                    server.stop(0)
-
-                return True
-            except ValueError:
-                print()
-            except EOFError:
-                print()
+            server_management(server)
         if choice == 3:
-            try:
-                restart = input("Are you sure you would like to stop the server? (y/n): ")
-                if restart == "y":
-                    server.save()
-                    server.say("Server restarting in 5 seconds...")
-                    os.system("sleep 5")
-                    server.restart(0)
-            except ValueError:
-                print()
-            except EOFError:
-                print()
+            user_management(server)
+
         if choice == 4:
             server.attach_logs()
 
