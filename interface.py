@@ -83,6 +83,7 @@ def server_management(server):
             server.restart(0)
 
 
+#WIP
 def user_management(server):
     os.system("clear")
 
@@ -121,7 +122,6 @@ def menu(server_choice):
             server_management(server)
         if choice == 3:
             user_management(server)
-
         if choice == 4:
             server.attach_logs()
 
