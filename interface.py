@@ -84,9 +84,13 @@ def server_management(server):
 
 
 def user_management(server):
+    os.system("clear")
+
     players = server.get_online_players()
+    i = 1
     for player in players:
-        print(player + "\n")
+        print(i + " | " + player + "\n")
+
     os.system("sleep 5")
 
 

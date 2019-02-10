@@ -122,8 +122,6 @@ class MC:
             for s in players_online:
                 players += s + ", "
             print("Players: %d/%d | %s" % (player_count, total_players, players))
-        #else:
-        #    print("Players: %d/%d" % (player_count, total_players))
 
     # prints and attaches to this servers' logs
     def attach_logs(self):
