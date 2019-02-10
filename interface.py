@@ -63,6 +63,7 @@ def server_management(server):
           "2 | " + Color.YELLOW + "Restart" + Color.END + "\n")
 
     choice = int(input("What would you like to do? " + Color.RED))
+    print(Color.END)
     if choice == 1:
         stop = input("Are you sure you would like to stop the server? (y/n): ")
 
