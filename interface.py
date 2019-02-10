@@ -87,6 +87,7 @@ def user_management(server):
     players = server.get_online_players()
     for player in players:
         print(player + "\n")
+    os.system("sleep 5")
 
 
 # Context-based options interface, takes in a docker container "server_choice"
