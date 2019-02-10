@@ -83,6 +83,12 @@ def server_management(server):
             server.restart(0)
 
 
+def user_management(server):
+    players = server.get_online_players()
+    for player in players:
+        print(player + "\n")
+
+
 # Context-based options interface, takes in a docker container "server_choice"
 def menu(server_choice):
     server = MC(server_choice)
