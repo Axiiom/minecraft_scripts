@@ -116,6 +116,8 @@ def user_management(server):
         kick_or_ban(server, player)
     elif choice == 3:
         give(server, player)
+    elif choice == 4:
+        modify_player(server, player)
 
 
 def modify_player(server, player):
