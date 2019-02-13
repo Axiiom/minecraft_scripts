@@ -128,7 +128,7 @@ def kick_or_ban(server, player):
 
         if ban == "y":
             message = input("Input a reason for ban: ")
-            server.rcon_call("ban " + player + message)
+            server.rcon_call("ban " + player + " " + message)
 
 
 def tp(server, player, players):
