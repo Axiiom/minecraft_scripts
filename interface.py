@@ -116,8 +116,8 @@ def user_management(server):
         if choice == 1:
             print("Who would you like to teleport " + Color.CYAN + player + Color.END + " to?")
             i = i
-            for p in players:
-                print(str(i) + " | " + p)
+            for pl in players:
+                print(str(i) + " | " + pl)
                 i = i + 1
             choice = (int(input("Enter the player's cooresponding number: ")))
             tp_to = players[choice-1]
