@@ -126,8 +126,11 @@ def user_management(server):
             tp_to = players[choice - 1]
             server.rcon_call("tp " + player + " " + tp_to)
         elif choice == 2:
-            tp_to = input("Enter the coordinates in X Y Z that you would like to teleport " + Color.CYAN + player + Color.END + " to")
+            tp_to = input("Enter the coordinates in X Y Z that you would like to teleport "
+                          + Color.CYAN + player + Color.END + " to: \n")
+            print("\nTeleporting " + Color.CYAN + player + Color.END + " to [" + tp_to + "]...")
             server.rcon_call("tp " + player + " " + tp_to)
+            os.system("sleep 1")
 
 
 # Context-based options interface, takes in a docker container "server_choice"
