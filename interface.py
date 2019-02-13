@@ -99,8 +99,8 @@ def user_management(server):
     player = players[choice-1]
 
     os.system("clear")
-    print(Color.END + Color.BOLD + player + Color.END + " on server "
-          + Color.CYAN + server.get_server_name() + Color.END)
+    print(Color.END + "Managing " + Color.BOLD + player + Color.END + " on server "
+          + Color.CYAN + server.get_server_name() + Color.END + "\n")
 
     print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
     print("1 | " + Color.DARKCYAN + "Teleport" + Color.END + "\n" +
@@ -118,7 +118,8 @@ def user_management(server):
 
             j = 1
             for pl in players:
-                print(str(j) + " | " + pl)
+                if pl is not player:
+                    print(str(j) + " | " + pl)
                 j = j + 1
 
             choice = (int(input("Enter the player's cooresponding number: ")))
