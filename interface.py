@@ -88,6 +88,7 @@ def user_management(server):
     os.system("clear")
 
     server.get_server_name_border()
+    print(Color.UNDERLINE + Color.BOLD + "Online players (\"ctrl+d\" to go back):" + Color.END)
 
     players = server.get_online_players()
     i = 1
@@ -95,7 +96,7 @@ def user_management(server):
         print(str(i) + " | " + p)
         i = i + 1
 
-    choice = int(input("Which player would you like to manage? " + Color.RED))
+    choice = int(input("\nWhich player would you like to manage? " + Color.RED))
     player = players[choice-1]
 
     os.system("clear")
@@ -118,7 +119,7 @@ def user_management(server):
 
 
 def give(server, player):
-    stuff = input("Input the item followed by the amount as such: \"Item Amount\"")
+    stuff = input("Input the item followed by the amount as such: \"Item Amount\"\n")
     server.rcon_call("give " + player + " " + stuff)
 
 
