@@ -21,11 +21,6 @@ class MC:
         self.name = container.name
         self.is_running = (container.status == "running")
 
-    # calls "message" on this servers' rcon-cli and returns the result
-    def __rcon_call(self, message):
-        if self.is_running:
-            return os.popen("docker exec " + self.name + " rcon-cli " + message).readlines()
-
     # calls "message" on this servers' rcon-cli and prints the result to the console
     def __rcon_call_loud(self, message):
         if self.is_running:
@@ -35,6 +30,11 @@ class MC:
     def __rcon_call_interactive(self, message):
         if self.is_running:
             return os.popen("docker exec -i" + self.name + " rcon-cli " + message).readlines()
+
+    # calls "message" on this servers' rcon-cli and returns the result
+    def rcon_call(self, message):
+        if self.is_running:
+            return os.popen("docker exec " + self.name + " rcon-cli " + message).readlines()
 
     # starts the container
     def start(self):
@@ -71,7 +71,7 @@ class MC:
     # gets the current player count of the server as an integer
     def get_player_count(self):
         if self.is_running:
-            player_count = self.__rcon_call("list")[0]
+            player_count = self.rcon_call("list")[0]
             player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
             index_of_break = player_count.index("|")
             player_count = player_count[:index_of_break].strip()
@@ -82,7 +82,7 @@ class MC:
     # gets the total player count of the server as an integer
     def get_total_players(self):
         if self.is_running:
-            player_count = self.__rcon_call("list")[0]
+            player_count = self.rcon_call("list")[0]
             player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
             index_of_break = player_count.index("|")
             player_count = player_count[:index_of_break].strip()
@@ -93,7 +93,7 @@ class MC:
     # returns the online players in a list of strings
     def get_online_players(self):
         if self.is_running:
-            player_count = self.__rcon_call("list")[0]
+            player_count = self.rcon_call("list")[0]
             index = str.index(player_count, "online: ") + 8
             player_count = player_count[index:].strip()
             if player_count is "":
@@ -149,3 +149,11 @@ class MC:
         output = os.popen("docker container inspect -f \"{{.State.Health.Status}}\" " + self.name).readlines()
         status = output[0].strip('\n')
         return status
+
+    # prints the name of the server's docker container
+    def get_server_name(self):
+        return self.name
+
+    # prints the name of the server's docker container with stylized border
+    def get_server_name_border(self):
+        return print_with_border(self.name)

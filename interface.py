@@ -87,13 +87,41 @@ def server_management(server):
 def user_management(server):
     os.system("clear")
 
+    print(server.get_server_name_border() + "\n")
+
     players = server.get_online_players()
     i = 1
-    for player in players:
-        print(str(i) + " | " + player + "\n")
+    for p in players:
+        print(str(i) + " | " + p)
         i = i + 1
 
     choice = int(input("Which player would you like to manage? " + Color.RED))
+    player = players[choice-1]
+
+    os.system("clear")
+    print(Color.END + Color.BOLD + player + Color.END + " on server "
+          + Color.CYAN + server.get_server_name() + Color.END)
+
+    print(Color.UNDERLINE + Color.BOLD + "Menu options (\"ctrl+d\" to go back):" + Color.END)
+    print("1 | " + Color.DARKCYAN + "Teleport" + Color.END + "\n" +
+          "2 | " + Color.GREEN + "Kick/Ban" + Color.END + "\n" +
+          "3 | " + Color.YELLOW + "Give Item" + Color.END + "\n" +
+          "4 | " + Color.BOLD + "Modify State/Stats" + Color.END + "\n")
+
+    choice = int(input("What would you like to do? "))
+    if choice == 1:
+        print("1 | " + Color.DARKCYAN + "Teleport to player" + Color.END + "\n" +
+              "2 | " + Color.GREEN + "Teleport to coordinates" + Color.END + "\n")
+        choice = (int(input("What wold you like to do? ")))
+        if choice == 1:
+            print("Who would you like to teleport " + Color.CYAN + player + Color.END + " to?")
+            i = 0
+            for p in players:
+                print(str(i) + " | " + p)
+                i = i + 1
+            choice = (int(input("Enter the player's cooresponding number: ")))
+            tp_to = players[choice-1]
+            server.rcon_call("tp " + player + " " + tp_to)
 
 
 # Context-based options interface, takes in a docker container "server_choice"
