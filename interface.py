@@ -115,20 +115,24 @@ def user_management(server):
         kick_or_ban(server, player)
 
 
+def give(server, player):
+    stuff = input("Input the item followed by the amount as such: \"Item Amount\"")
+    server.rcon_call("give " + player + " " + stuff)
+
+
 def kick_or_ban(server, player):
     print("1 | " + Color.YELLOW + "Kick " + Color.END + player + "\n" +
           "2 | " + Color.RED + "Ban " + Color.END + player + "\n")
 
     choice = (int(input("What wold you like to do? ")))
     if choice == 1:
-        server.rcon_call("kick " + player)
+        message = input("Input a reason for ban: ")
+        server.rcon_call("kick " + player + " " + message)
     elif choice == 2:
         ban = input("Are you sure you would like to" + Color.BOLD + " ban " + Color.END +
                     player + "?(y/n): ")
-
         if ban == "y":
-            message = input("Input a reason for ban: ")
-            server.rcon_call("ban " + player + " " + message)
+            server.rcon_call("ban " + player)
 
 
 def tp(server, player, players):
