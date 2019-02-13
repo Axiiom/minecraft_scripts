@@ -116,7 +116,7 @@ def user_management(server):
         if choice == 1:
             print("Who would you like to teleport " + Color.CYAN + player + Color.END + " to?")
 
-            j = i
+            j = 1
             for pl in players:
                 print(str(j) + " | " + pl)
                 j = i + 1
