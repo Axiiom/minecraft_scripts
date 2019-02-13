@@ -124,8 +124,7 @@ def modify_player(server, player):
     print("1 | " + Color.DARKCYAN + "Change Gamemode" + Color.END + "\n" +
           "2 | " + Color.GREEN + "Give/Remove Operator Permissions" + Color.END + "\n" +
           "3 | " + Color.YELLOW + "Kill" + Color.END + "\n" +
-          "4 | " + Color.BOLD + "Give XP" + Color.END + "\n" +
-          "5 | " + Color.YELLOW + "Enchant Item in Hand" + Color.END + "\n")
+          "4 | " + Color.BOLD + "Give XP" + Color.END + "\n")
 
     choice = int(input("What would you like to do to " + Color.CYAN + player + Color.END + "? "))
     if choice == 1:
@@ -158,6 +157,19 @@ def modify_player(server, player):
         if kill == "y":
             server.rcon_call("kill " + player)
 
+    elif choice == 4:
+        print("1 | " + Color.DARKCYAN + "Add XP" + Color.END + "\n" +
+              "2 | " + Color.GREEN + "Set XP" + Color.END + "\n")
+
+        choice = int(input("What would you like to do?"))
+        xp = input("Enter the amount of XP followed by whether you are adding\n" +
+                   "levels or individual points (i.e: 10 levels | 10 points): ")
+
+        if choice == 1:
+            server.rcon_call("xp add " + player + " " + xp)
+        elif choice == 2:
+            server.rcon_call("xp set " + player + " " + xp)
+
 
 def give(server, player):
     stuff = input("Input the item followed by the amount as such: \"Item Amount\"\n")
@@ -185,7 +197,8 @@ def tp(server, player, players):
 
     choice = (int(input("What wold you like to do? ")))
     if choice == 1:
-        print(Color.BOLD + "\nWho would you like to teleport " + Color.CYAN + player + Color.END + " to?")
+        print(Color.BOLD + "\nWho would you like to teleport " + Color.CYAN + player
+              + Color.END + Color.BOLD + " to?" + Color.END)
 
         it = 1
         for pl in players:
