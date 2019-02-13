@@ -162,7 +162,7 @@ def modify_player(server, player):
               "2 | " + Color.GREEN + "Set XP" + Color.END + "\n")
 
         choice = int(input("What would you like to do?"))
-        xp = input("Enter the amount of XP followed by whether you are adding\n" +
+        xp = input("\nEnter the amount of XP followed by whether you are adding\n" +
                    "levels or individual points (i.e: 10 levels | 10 points): ")
 
         if choice == 1:
