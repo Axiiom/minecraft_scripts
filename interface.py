@@ -118,7 +118,7 @@ def user_management(server):
 
             j = 1
             for pl in players:
-                if pl is not player:
+                if pl != player:
                     print(str(j) + " | " + pl)
                 j = j + 1
 
