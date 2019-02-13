@@ -185,7 +185,7 @@ def tp(server, player, players):
 
     choice = (int(input("What wold you like to do? ")))
     if choice == 1:
-        print("Who would you like to teleport " + Color.CYAN + player + Color.END + " to?")
+        print(Color.BOLD + "\nWho would you like to teleport " + Color.CYAN + player + Color.END + " to?")
 
         it = 1
         for pl in players:
