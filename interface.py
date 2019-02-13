@@ -119,7 +119,7 @@ def user_management(server):
             j = 1
             for pl in players:
                 print(str(j) + " | " + pl)
-                j = i + 1
+                j = j + 1
 
             choice = (int(input("Enter the player's cooresponding number: ")))
             tp_to = players[choice-1]
