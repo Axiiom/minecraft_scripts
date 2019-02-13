@@ -146,7 +146,7 @@ def modify_player(server, player):
     elif choice == 2:
         print("1 | " + Color.DARKCYAN + "Give Operator Permissions" + Color.END + "\n" +
               "2 | " + Color.GREEN + "Remove Operator Permissions" + Color.END + "\n")
-        op = int(choice("What would you like to do? "))
+        op = int(input("What would you like to do? "))
         if op == 1:
             server.rcon_call("op " + player)
         elif op == 2:
