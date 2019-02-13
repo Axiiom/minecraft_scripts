@@ -128,8 +128,6 @@ def modify_player(server, player):
           "5 | " + Color.YELLOW + "Enchant Item in Hand" + Color.END + "\n")
 
     choice = int(input("What would you like to do to " + Color.CYAN + player + Color.END + "? "))
-    print("\n")
-
     if choice == 1:
         print("1 | " + Color.DARKCYAN + "Survival" + Color.END + "\n" +
               "2 | " + Color.GREEN + "Creative" + Color.END + "\n" +
@@ -137,13 +135,13 @@ def modify_player(server, player):
               "4 | " + Color.BOLD + "Spectator" + Color.END + "\n")
         gamemode = int(input("Select Gamemode: "))
         if gamemode == 1:
-            server.rcon_call("gamemode " + player + " survival")
+            server.rcon_call("gamemode survival " + player)
         if gamemode == 2:
-            server.rcon_call("gamemode " + player + " creative")
+            server.rcon_call("gamemode creative " + player)
         if gamemode == 3:
-            server.rcon_call("gamemode " + player + " adventure")
+            server.rcon_call("gamemode adventure " + player)
         if gamemode == 4:
-            server.rcon_call("gamemode " + player + " spectator")
+            server.rcon_call("gamemode spectator " + player)
 
     elif choice == 2:
         print("1 | " + Color.DARKCYAN + "Give Operator Permissions" + Color.END + "\n" +
