@@ -111,6 +111,24 @@ def user_management(server):
     choice = int(input("What would you like to do? "))
     if choice == 1:
         tp(server, player, players)
+    elif choice == 2:
+        kick_or_ban(server, player)
+
+
+def kick_or_ban(server, player):
+    print("1 | " + Color.YELLOW + "Kick " + Color.END + player + "\n" +
+          "2 | " + Color.RED + "Ban " + Color.END + player + "\n")
+
+    choice = (int(input("What wold you like to do? ")))
+    if choice == 1:
+        server.rcon_call("kick " + player)
+    elif choice == 2:
+        ban = input("Are you sure you would like to" + Color.BOLD + " ban " + Color.END +
+                    player + "?(y/n): ")
+
+        if ban == "y":
+            message = input("Input a reason for ban: ")
+            server.rcon_call("ban " + player + message)
 
 
 def tp(server, player, players):
@@ -129,6 +147,7 @@ def tp(server, player, players):
         choice = (int(input("Enter the player's cooresponding number: ")))
         tp_to = players[choice - 1]
         server.rcon_call("tp " + player + " " + tp_to)
+
     elif choice == 2:
         tp_to = input("Enter the coordinates in X Y Z that you would like to teleport "
                       + Color.CYAN + player + Color.END + " to: \n")
