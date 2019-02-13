@@ -118,6 +118,47 @@ def user_management(server):
         give(server, player)
 
 
+def modify_player(server, player):
+    print("1 | " + Color.DARKCYAN + "Change Gamemode" + Color.END + "\n" +
+          "2 | " + Color.GREEN + "Give/Remove Operator Permissions" + Color.END + "\n" +
+          "3 | " + Color.YELLOW + "Kill" + Color.END + "\n" +
+          "4 | " + Color.BOLD + "Give XP" + Color.END + "\n" +
+          "5 | " + Color.YELLOW + "Enchant Item in Hand" + Color.END + "\n")
+
+    choice = int(input("What would you like to do to " + Color.CYAN + player + Color.END + "? "))
+    print("\n")
+
+    if choice == 1:
+        print("1 | " + Color.DARKCYAN + "Survival" + Color.END + "\n" +
+              "2 | " + Color.GREEN + "Creative" + Color.END + "\n" +
+              "3 | " + Color.YELLOW + "Adventure" + Color.END + "\n" +
+              "4 | " + Color.BOLD + "Spectator" + Color.END + "\n")
+        gamemode = int(input("Select Gamemode: "))
+        if gamemode == 1:
+            server.rcon_call("gamemode " + player + " survival")
+        if gamemode == 2:
+            server.rcon_call("gamemode " + player + " creative")
+        if gamemode == 3:
+            server.rcon_call("gamemode " + player + " adventure")
+        if gamemode == 4:
+            server.rcon_call("gamemode " + player + " spectator")
+
+    elif choice == 2:
+        print("1 | " + Color.DARKCYAN + "Give Operator Permissions" + Color.END + "\n" +
+              "2 | " + Color.GREEN + "Remove Operator Permissions" + Color.END + "\n")
+        op = int(choice("What would you like to do? "))
+        if op == 1:
+            server.rcon_call("op " + player)
+        elif op == 2:
+            server.rcon_call("deop " + player)
+
+    elif choice == 3:
+        kill = input("Are you sure you want to kill " + Color.CYAN + player + Color.END + "(y/n)? ")
+
+        if kill == "y":
+            server.rcon_call("kill " + player)
+
+
 def give(server, player):
     stuff = input("Input the item followed by the amount as such: \"Item Amount\"\n")
     server.rcon_call("give " + player + " " + stuff)
