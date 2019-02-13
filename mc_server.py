@@ -156,4 +156,4 @@ class MC:
 
     # prints the name of the server's docker container with stylized border
     def get_server_name_border(self):
-        return print_with_border(self.name)
+        print_with_border(self.name)
