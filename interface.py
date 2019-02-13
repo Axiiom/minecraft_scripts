@@ -112,18 +112,21 @@ def user_management(server):
     if choice == 1:
         print("1 | " + Color.DARKCYAN + "Teleport to player" + Color.END + "\n" +
               "2 | " + Color.GREEN + "Teleport to coordinates" + Color.END + "\n")
+
         choice = (int(input("What wold you like to do? ")))
         if choice == 1:
             print("Who would you like to teleport " + Color.CYAN + player + Color.END + " to?")
 
-            j = 1
+            it = 1
             for pl in players:
-                if pl != player:
-                    print(str(j) + " | " + pl)
-                j = j + 1
+                print(str(it) + " | " + pl)
+                it = it + 1
 
             choice = (int(input("Enter the player's cooresponding number: ")))
-            tp_to = players[choice-1]
+            tp_to = players[choice - 1]
+            server.rcon_call("tp " + player + " " + tp_to)
+        elif choice == 2:
+            tp_to = input("Enter the coordinates in X Y Z that you would like to teleport " + Color.CYAN + player + Color.END + " to")
             server.rcon_call("tp " + player + " " + tp_to)
 
 
