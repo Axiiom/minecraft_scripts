@@ -87,7 +87,7 @@ def server_management(server):
 def user_management(server):
     os.system("clear")
 
-    print(server.get_server_name_border() + "\n")
+    server.get_server_name_border()
 
     players = server.get_online_players()
     i = 1
