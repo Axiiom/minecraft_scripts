@@ -34,7 +34,7 @@ def get_server():
 
 def print_server_list():
     print(Color.END + Color.BOLD + "\nServers (press any key to refresh | \"ctrl+c\" to close):\n" + Color.END)
-    print(Color.UNDERLINE + "%-3s | %-15s | %-10s | %-8s | %-15s" % ("Num", "Name", "Players", "MC Status", "Container Status") + Color.END)
+    print(Color.UNDERLINE + "%-3s | %-20s | %-10s | %-8s | %-15s" % ("Num", "Name", "Players", "MC Status", "Container Status") + Color.END)
 
     i = 1
     for container in client.containers.list(all):
@@ -50,7 +50,7 @@ def print_server_list():
         if player_count is not None and total_players is not None:
             players = str(player_count) + "/" + str(total_players)
 
-        print("%3d | %-15s | %-10s | %-8s | %-15s" % (i, name, players, mc_status, docker_status))
+        print("%3d | %-20s | %-10s | %-8s | %-15s" % (i, name, players, mc_status, docker_status))
         i += 1
 
 
