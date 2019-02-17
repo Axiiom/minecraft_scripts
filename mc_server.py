@@ -135,7 +135,7 @@ class MC:
 
         if version:
             print("Version: %s" % version)
-        if str(players_online) != "['']":
+        if players_online != ['']:
             print("PLAYERS ONLINE: \"" + str(players_online) + "\"")
             players = ""
             for s in players_online:
