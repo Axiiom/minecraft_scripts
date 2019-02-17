@@ -73,45 +73,51 @@ class MC:
     # gets the current player count of the server as an integer
     def get_player_count(self):
         if self.__is_running():
-            pc = self.rcon_call("list")
-            if pc:
-                player_count = pc[0]
-                player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
-                index_of_break = player_count.index("|")
-                player_count = player_count[:index_of_break].strip()
+            player_count = self.rcon_call("list")[0]
 
-                players = list(re.findall('\d+', player_count))
-                return int(players[0])
-            else:
+            if player_count == "":
                 return None
+
+            player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
+            index_of_break = player_count.index("|")
+            player_count = player_count[:index_of_break].strip()
+
+            players = list(re.findall('\d+', player_count))
+            return int(players[0])
+        else:
+            return None
 
     # gets the total player count of the server as an integer
     def get_total_players(self):
         if self.__is_running():
-            pc = self.rcon_call("list")
-            if pc:
-                player_count = pc[0]
-                player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
-                index_of_break = player_count.index("|")
-                player_count = player_count[:index_of_break].strip()
+            player_count = self.rcon_call("list")[0]
 
-                players = list(re.findall('\d+', player_count))
-                return int(players[1])
-            else:
+            if player_count == "":
                 return None
+
+            player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
+            index_of_break = player_count.index("|")
+            player_count = player_count[:index_of_break].strip()
+
+            players = list(re.findall('\d+', player_count))
+            return int(players[1])
+        else:
+            return None
 
     # returns the online players in a list of strings
     def get_online_players(self):
         if self.__is_running():
-            pc = self.rcon_call("list")
-            if pc:
-                player_count = pc[0]
-                index = str.index(player_count, "online: ") + 8
-                player_count = player_count[index:].strip()
-                player_count = player_count[index:].strip()
-                return player_count.split(", ")
-            else:
+            player_count = self.rcon_call("list")[0]
+
+            if player_count == "":
                 return None
+
+            index = str.index(player_count, "online: ") + 8
+            player_count = player_count[index:].strip()
+            player_count = player_count[index:].strip()
+            return player_count.split(", ")
+        else:
+            return None
 
     # prints current server information to the console in the format:
     #
