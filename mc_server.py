@@ -136,6 +136,7 @@ class MC:
         if version:
             print("Version: %s" % version)
         if players_online is not ("" or None):
+            print("PLAYERS ONLINE: \"" + players_online + "\"")
             players = ""
             for s in players_online:
                 players += s + ", "
