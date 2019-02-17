@@ -71,24 +71,32 @@ class MC:
     # gets the current player count of the server as an integer
     def get_player_count(self):
         if self.is_running:
-            player_count = self.rcon_call("list")[0]
-            player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
-            index_of_break = player_count.index("|")
-            player_count = player_count[:index_of_break].strip()
+            pc = self.rcon_call("list")
+            if pc:
+                player_count = pc[0]
+                player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
+                index_of_break = player_count.index("|")
+                player_count = player_count[:index_of_break].strip()
 
-            players = list(re.findall('\d+', player_count))
-            return int(players[0])
+                players = list(re.findall('\d+', player_count))
+                return int(players[0])
+            else:
+                return None
 
     # gets the total player count of the server as an integer
     def get_total_players(self):
         if self.is_running:
-            player_count = self.rcon_call("list")[0]
-            player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
-            index_of_break = player_count.index("|")
-            player_count = player_count[:index_of_break].strip()
+            pc = self.rcon_call("list")
+            if pc:
+                player_count = pc[0]
+                player_count = player_count.replace("There are ", "").replace(" of a max ", "/").replace(" players online: ","|")
+                index_of_break = player_count.index("|")
+                player_count = player_count[:index_of_break].strip()
 
-            players = list(re.findall('\d+', player_count))
-            return int(players[1])
+                players = list(re.findall('\d+', player_count))
+                return int(players[1])
+            else:
+                return None
 
     # returns the online players in a list of strings
     def get_online_players(self):
