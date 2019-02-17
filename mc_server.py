@@ -135,13 +135,12 @@ class MC:
 
         if version:
             print("Version: %s" % version)
-        if players_online != ['']:
-            print("PLAYERS ONLINE: \"" + str(players_online) + "\"")
+        if players_online and players_online != ['']:
             players = ""
             for s in players_online:
                 players += s + ", "
             print("Players: %d/%d | %s" % (player_count, total_players, players))
-        else:
+        elif player_count and total_players:
             print("Players: %d/%d" % (player_count, total_players))
 
     # prints and attaches to this servers' logs
