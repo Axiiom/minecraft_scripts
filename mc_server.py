@@ -93,13 +93,15 @@ class MC:
     # returns the online players in a list of strings
     def get_online_players(self):
         if self.is_running:
-            player_count = self.rcon_call("list")[0]
-            index = str.index(player_count, "online: ") + 8
-            player_count = player_count[index:].strip()
-            if player_count is "":
-                return None
-            else:
+            pc = self.rcon_call("list")
+            if pc:
+                player_count = pc[0]
+                index = str.index(player_count, "online: ") + 8
+                player_count = player_count[index:].strip()
+                player_count = player_count[index:].strip()
                 return player_count.split(", ")
+            else:
+                return None
 
     # prints current server information to the console in the format:
     #
