@@ -114,7 +114,6 @@ class MC:
 
             index = str.index(player_count, "online: ") + 8
             player_count = player_count[index:].strip()
-            player_count = player_count[index:].strip()
             return player_count.split(", ")
         else:
             return None
